@@ -1,5 +1,4 @@
-from modules.Validation import Validate
-#from modules.Board import Board
+from modules.Validation import *
 from modules.Constants import *
 
 def movePiece(self, event):
@@ -8,8 +7,8 @@ def movePiece(self, event):
         self.y = event.y-(SQSIZE/2)
         self.x = 0 if self.x < 0 else self.x
         self.y = 0 if self.y < 0 else self.y
-        self.x = 525 if self.x > 525 else self.x
-        self.y = 525 if self.y > 525 else self.y
+        self.x = MAXPIECEX if self.x > MAXPIECEX else self.x
+        self.y = MAXPIECEY if self.y > MAXPIECEY else self.y
         # Move the image to the new position
         self.board.coords(self.button_id, self.x, self.y)
         self.board.lift(self.button_id)
@@ -17,7 +16,8 @@ def movePiece(self, event):
 def startMovement(self, event):
     from modules.Board import Board
     self.x, self.y = event.x, event.y
-    moves, kills = Validate.getPossibleMoves(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
+    moves = ValidateMoves.getPossibleMoves(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
+    kills = ValidateKills.getPossibleKills(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
     print(kills)
     self.validMoves = moves
     self.validKills = kills
@@ -36,7 +36,7 @@ def stopMovement(self, event):
     from modules.Board import Board
 
     def move(x, y, moved):
-        board.coords(self.button_id, x*75, y*75)
+        board.coords(self.button_id, x*SQSIZE, y*SQSIZE)
         for id in self.imageIDs:
             board.delete(id)
         if moved:
@@ -49,12 +49,12 @@ def stopMovement(self, event):
                     if j.piece == 2:
                         j.enPassantValid = False
             if self.piece == 2:
-                self.enPassantValid = Validate.checkEnPassantValid(self.colour, self.pos, Board.boardArr)
+                self.enPassantValid = ValidateMoves.checkEnPassantValid(self.colour, self.pos, Board.boardArr)
         
-    x = event.x//75
-    y = event.y//75
-    XOutsideLimits = self.x == 0 or self.x == 525
-    YOutsideLimits = self.y == 0 or self.y == 525
+    x = event.x//SQSIZE
+    y = event.y//SQSIZE
+    XOutsideLimits = self.x == 0 or self.x == MAXPIECEX
+    YOutsideLimits = self.y == 0 or self.y == MAXPIECEY
     board = self.board
     board.lift(self.button_id)
     if Board.boardArr[y][x].piece != 0:
@@ -62,14 +62,14 @@ def stopMovement(self, event):
     elif [y, x] not in self.validMoves:
         move(self.pos[1], self.pos[0], False)
     elif XOutsideLimits:
-        x = self.x//75
+        x = self.x//SQSIZE
         if YOutsideLimits:
-            y = self.y//75
+            y = self.y//SQSIZE
         move(x, y, True)
         self.firstMove = False
         self.moved = True
     elif YOutsideLimits:
-        y = self.y//75
+        y = self.y//SQSIZE
         move(x, y, True)
         self.firstMove = False
         self.moved = True

@@ -2,30 +2,9 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 
-class Validate:
+class ValidateMoves:
     def getPossibleMoves(pos, piece,colour, moved, boardArr):
-        validMoves = []
-        def FindPawnKills():
-            validKills = []
-            EnPassantInfo = Validate.checkEnPassant(colour, pos, boardArr)
-            print(EnPassantInfo)
-            if EnPassantInfo[0]:
-                for position in EnPassantInfo[1]:
-                    if colour == "White":
-                        validKills.append([position, pos[1]+1])
-                    else:
-                        validKills.append([position, pos[1]-1])
-            if colour == "White":
-                if boardArr[pos[0]-1][pos[1]-1].piece != 0:
-                    validKills.append([pos[0]-1, pos[1]-1])
-                if boardArr[pos[0]-1][pos[1]+1].piece != 0:
-                    validKills.append([pos[0]-1, pos[1]+1])
-            else:
-                if boardArr[pos[0]+1][pos[1]-1].piece != 0:
-                    validKills.append([pos[0]+1,pos[1]-1])
-                if boardArr[pos[0]+1][pos[1]+1].piece != 0:
-                    validKills.append([pos[0]+1,pos[1]+1])
-            return validKills   
+        validMoves = []   
         if piece == 2: # Pawn move validation.
             if not moved:
                 print(pos)
@@ -51,7 +30,7 @@ class Validate:
                         validMoves = []
                         if boardArr[pos[0]+1][pos[1]].piece == 0:
                             validMoves = [[pos[0]+1,pos[1]]]
-        return validMoves, FindPawnKills() # Change this to FindKills() for all kills
+        return validMoves
 
     def checkEnPassant(colour, pos, boardArr):
         enPassantMoves = []
@@ -111,3 +90,26 @@ class Validate:
                         return True
         return False
 
+class ValidateKills:
+    def getPossibleKills(pos, piece, colour, moved, boardArr):
+            if piece == 2:
+                validKills = []
+                EnPassantInfo = ValidateMoves.checkEnPassant(colour, pos, boardArr)
+                print(EnPassantInfo)
+                if EnPassantInfo[0]:
+                    for position in EnPassantInfo[1]:
+                        if colour == "White":
+                            validKills.append([position, pos[1]+1])
+                        else:
+                            validKills.append([position, pos[1]-1])
+                if colour == "White":
+                    if boardArr[pos[0]-1][pos[1]-1].piece != 0:
+                        validKills.append([pos[0]-1, pos[1]-1])
+                    if boardArr[pos[0]-1][pos[1]+1].piece != 0:
+                        validKills.append([pos[0]-1, pos[1]+1])
+                else:
+                    if boardArr[pos[0]+1][pos[1]-1].piece != 0:
+                        validKills.append([pos[0]+1,pos[1]-1])
+                    if boardArr[pos[0]+1][pos[1]+1].piece != 0:
+                        validKills.append([pos[0]+1,pos[1]+1])
+                return validKills
