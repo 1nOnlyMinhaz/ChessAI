@@ -34,7 +34,7 @@ def startMovement(self, event):
 def stopMovement(self, event):
     from modules.Pieces import Piece
     from modules.Board import Board
-
+    from modules.Kill import Kill
     def move(x, y, moved):
         board.coords(self.button_id, x*SQSIZE, y*SQSIZE)
         for id in self.imageIDs:
@@ -57,11 +57,17 @@ def stopMovement(self, event):
     YOutsideLimits = self.y == 0 or self.y == MAXPIECEY
     board = self.board
     board.lift(self.button_id)
-    if Board.boardArr[y][x].piece != 0:
+    if [y, x] in self.validKills:
+        Kill(board, [y, x], self.colour)
+        move(x, y, True)
+        self.firstMove = False
+        self.moved = True
+    elif Board.boardArr[y][x].piece != 0:
         move(self.pos[1], self.pos[0], False)
     elif [y, x] not in self.validMoves:
         move(self.pos[1], self.pos[0], False)
     elif XOutsideLimits:
+        print(1)
         x = self.x//SQSIZE
         if YOutsideLimits:
             y = self.y//SQSIZE
@@ -69,11 +75,13 @@ def stopMovement(self, event):
         self.firstMove = False
         self.moved = True
     elif YOutsideLimits:
+        print(2)
         y = self.y//SQSIZE
         move(x, y, True)
         self.firstMove = False
         self.moved = True
     else:
+        print(3)
         move(x, y, True)
         self.firstMove = False
         self.moved = True

@@ -3,9 +3,15 @@ from PIL import Image, ImageTk
 
 
 class ValidateMoves:
+
     def getPossibleMoves(pos, piece,colour, moved, boardArr):
-        validMoves = []   
-        if piece == 2: # Pawn move validation.
+        
+        def checkKnight():
+            validMoves = []
+            if colour == "White":
+                pass
+        def checkPawn():
+            validMoves = []
             if not moved:
                 print(pos)
                 print(colour)
@@ -30,6 +36,12 @@ class ValidateMoves:
                         validMoves = []
                         if boardArr[pos[0]+1][pos[1]].piece == 0:
                             validMoves = [[pos[0]+1,pos[1]]]
+            return validMoves
+        validMoves = []
+        if piece == 2: # Pawn move validation.
+            validMoves = checkPawn()
+        elif piece == 3: # Knight move validation.
+            validMoves = checkKnight()
         return validMoves
 
     def checkEnPassant(colour, pos, boardArr):
@@ -37,23 +49,29 @@ class ValidateMoves:
         if pos[1] != 0 and pos[1] != 7:
             if boardArr[pos[0]][pos[1]+1].piece == 2 and boardArr[pos[0]][pos[1]+1].enPassantValid: # Checks if you can use en passant on the pawn next to it.
                 if boardArr[pos[0]][pos[1]-1].piece == 2 and boardArr[pos[0]][pos[1]-1].enPassantValid: # Changing this so the en passant moves are in a list. Gotta make the changes to FindKills() too.
-                    enPassantMoves.append(pos[0]+1)
-                enPassantMoves.append(pos[0]-1)
-                return [True, enPassantMoves]
+                    enPassantMoves.append(pos[1]-1)
+                enPassantMoves.append(pos[1]+1)
+            elif boardArr[pos[0]][pos[1]-1].piece == 2 and boardArr[pos[0]][pos[1]-1].enPassantValid:
+                enPassantMoves.append(pos[1]-1)
+            return [True, enPassantMoves]
         elif pos[1] == 0:
             if boardArr[pos[0]][pos[1]+1].piece == 2 and boardArr[pos[0]][pos[1]+1].enPassantValid: # Checks if you can use en passant on the pawn next to it.
-                enPassantMoves.append(pos[0]-1)
+                enPassantMoves.append(pos[1]+1)
                 return [True, enPassantMoves]
         else:
             if boardArr[pos[0]][pos[1]-1].piece == 2 and boardArr[pos[0]][pos[1]-1].enPassantValid: # Checks if you can use en passant on the pawn next to it.
-                enPassantMoves.append(pos[0]+1)
+                enPassantMoves.append(pos[1]-1)
                 return [True, enPassantMoves]
         return [False, 404]
     
     def checkEnPassantValid(colour, pos, boardArr):
         if colour == "Black":
-            condition1 = boardArr[pos[0]][pos[1]+1].piece == 2 and boardArr[pos[0]][pos[1]+1].colour == "White"
-            condition2 = boardArr[pos[0]][pos[1]-1].piece == 2 and boardArr[pos[0]][pos[1]-1].colour == "White"
+            condition1 = False
+            condition2 = False
+            if pos[1] != 7:
+                condition1 = boardArr[pos[0]][pos[1]+1].piece == 2 and boardArr[pos[0]][pos[1]+1].colour == "White"
+            if pos[1] != 0:
+                condition2 = boardArr[pos[0]][pos[1]-1].piece == 2 and boardArr[pos[0]][pos[1]-1].colour == "White"
             if pos[1] != 0 and pos[1] != 7:
                 if condition1 or condition2:
                     if pos[0] == 3:
@@ -70,8 +88,13 @@ class ValidateMoves:
                         print("En passant!")
                         return True
         else:
-            condition1 = boardArr[pos[0]][pos[1]+1].piece == 2 and boardArr[pos[0]][pos[1]+1].colour == "Black"
-            condition2 = boardArr[pos[0]][pos[1]-1].piece == 2 and boardArr[pos[0]][pos[1]-1].colour == "Black"
+            if colour == "Black":
+                condition1 = False
+                condition2 = False
+            if pos[1] != 7:
+                condition1 = boardArr[pos[0]][pos[1]+1].piece == 2 and boardArr[pos[0]][pos[1]+1].colour == "Black"
+            if pos[1] != 0:
+                condition2 = boardArr[pos[0]][pos[1]-1].piece == 2 and boardArr[pos[0]][pos[1]-1].colour == "Black"
             if pos[1] != 0 and pos[1] != 7:
                 #print(boardArr[pos[0]][pos[1]+1])
                 if condition1 or condition2:
@@ -99,17 +122,21 @@ class ValidateKills:
                 if EnPassantInfo[0]:
                     for position in EnPassantInfo[1]:
                         if colour == "White":
-                            validKills.append([position, pos[1]+1])
+                            validKills.append([pos[0]-1, position])
                         else:
-                            validKills.append([position, pos[1]-1])
+                            validKills.append([pos[0]+1, position])
                 if colour == "White":
-                    if boardArr[pos[0]-1][pos[1]-1].piece != 0:
-                        validKills.append([pos[0]-1, pos[1]-1])
-                    if boardArr[pos[0]-1][pos[1]+1].piece != 0:
-                        validKills.append([pos[0]-1, pos[1]+1])
+                    if pos[1] != 0:
+                        if boardArr[pos[0]-1][pos[1]-1].piece != 0 and boardArr[pos[0]-1][pos[1]-1].colour != boardArr[pos[0]][pos[1]].colour:
+                            validKills.append([pos[0]-1, pos[1]-1])
+                    if pos[1] != 7:
+                        if boardArr[pos[0]-1][pos[1]+1].piece != 0 and boardArr[pos[0]-1][pos[1]+1].colour != boardArr[pos[0]][pos[1]].colour:
+                            validKills.append([pos[0]-1, pos[1]+1])
                 else:
-                    if boardArr[pos[0]+1][pos[1]-1].piece != 0:
-                        validKills.append([pos[0]+1,pos[1]-1])
-                    if boardArr[pos[0]+1][pos[1]+1].piece != 0:
-                        validKills.append([pos[0]+1,pos[1]+1])
+                    if pos[1] != 0:
+                        if boardArr[pos[0]+1][pos[1]-1].piece != 0 and boardArr[pos[0]+1][pos[1]-1].colour != boardArr[pos[0]][pos[1]].colour:
+                            validKills.append([pos[0]+1,pos[1]-1])
+                    if pos[1] != 7:
+                        if boardArr[pos[0]+1][pos[1]+1].piece != 0 and boardArr[pos[0]+1][pos[1]+1].colour != boardArr[pos[0]][pos[1]].colour:
+                            validKills.append([pos[0]+1,pos[1]+1])
                 return validKills
