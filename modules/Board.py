@@ -11,13 +11,13 @@ class Board:
         self.width = width
         self.height = height
         Board.boardArr = [[0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0],
-                         [0,0,0,0,0,0,0,0]]
+                          [0,0,0,0,0,0,0,0],
+                          [0,0,0,0,0,0,0,0],
+                          [0,0,0,0,0,0,0,0],
+                          [0,0,0,0,0,0,0,0],
+                          [0,0,0,0,0,0,0,0],
+                          [0,0,0,0,0,0,0,0],
+                          [0,0,0,0,0,0,0,0]]
         img = Image.open("move.png")
         self.photoImage1 = ImageTk.PhotoImage(img)
         print(self.photoImage1, "    THE DOT")
@@ -28,7 +28,7 @@ class Board:
         self.canvas = canvas
         for i in range(ROWS):
             for j in range(COLS):
-                Board.boardArr[i][j] = Piece(canvas, 0, [i, j], 0)
+                Board.boardArr[i][j] = Piece(canvas, 0, [i, j], "None")
         # Draw the squares of the chess board
         for row in range(8):
             for col in range(8):
@@ -52,7 +52,7 @@ class Board:
             "q": Piece.Queen
         }
         col = 0
-        row = 7
+        row = ROWS - 1
 
         # Don't wanna actually make any changes to the algorithm, just the adding to the array part.
 
@@ -79,9 +79,8 @@ class Board:
         y1 = pos[0] * SQSIZE
         x2 = x1+SQSIZE
         y2 = y1+SQSIZE
-       # board.create_rectangle(x1, y1, x2, y2, fill=colour, width = 0)
+        # board.create_rectangle(x1, y1, x2, y2, fill=colour, width = 0)
         id = board.create_image(x1, y1, image="pyimage1", anchor="nw")
-        board.lift(id)
         return id
     
     def showKill(pos, board):

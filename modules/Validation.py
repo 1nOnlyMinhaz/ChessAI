@@ -8,13 +8,34 @@ class ValidateMoves:
         
         def checkKnight():
             validMoves = []
-            if colour == "White":
-                pass
+            possibleMoves = []
+            if pos[0]+2 < 8:
+                if pos[1]+1 < 8:
+                    possibleMoves.append(boardArr[pos[0]+2][pos[1]+1])
+                if pos[1]-1 >= 0:
+                    possibleMoves.append(boardArr[pos[0]+2][pos[1]-1])
+            if pos[0]-2 < 8 and pos[0] > 1:
+                if pos[1]+1 < 8:
+                    possibleMoves.append(boardArr[pos[0]-2][pos[1]+1])
+                if pos[1]-1 >= 0:
+                    possibleMoves.append(boardArr[pos[0]-2][pos[1]-1])
+            if pos[1]+2 < 8:
+                if pos[0]+1 < 8:
+                    possibleMoves.append(boardArr[pos[0]+1][pos[1]+2])
+                if pos[0]-1 >= 0:
+                    possibleMoves.append(boardArr[pos[0]-1][pos[1]+2])
+            if pos[1]-2 < 8 and pos[1] > 1:
+                if pos[0]+1 < 8:
+                    possibleMoves.append(boardArr[pos[0]+1][pos[1]-2])
+                if pos[0]-1 >= 0:
+                    possibleMoves.append(boardArr[pos[0]-1][pos[1]-2])
+            for piece in possibleMoves:
+                if piece.piece == 0 and piece.colour != colour:
+                    validMoves.append(piece.pos)
+            return validMoves
         def checkPawn():
             validMoves = []
             if not moved:
-                print(pos)
-                print(colour)
                 if colour == "White":
                     if boardArr[pos[0]-1][pos[1]].piece == 0:
                         validMoves = [[pos[0]-1,pos[1]]]
@@ -115,7 +136,36 @@ class ValidateMoves:
 
 class ValidateKills:
     def getPossibleKills(pos, piece, colour, moved, boardArr):
-            if piece == 2:
+            validKills = []
+            def checkKnight():
+                validKills = []
+                possibleKills = []
+                if pos[0]+2 < 8:
+                    if pos[1]+1 < 8:
+                        possibleKills.append(boardArr[pos[0]+2][pos[1]+1])
+                    if pos[1]-1 >= 0:
+                        possibleKills.append(boardArr[pos[0]+2][pos[1]-1])
+                if pos[0]-2 < 8 and pos[0] > 1:
+                    if pos[1]+1 < 8:
+                        possibleKills.append(boardArr[pos[0]-2][pos[1]+1])
+                    if pos[1]-1 >= 0:
+                        possibleKills.append(boardArr[pos[0]-2][pos[1]-1])
+                if pos[1]+2 < 8:
+                    if pos[0]+1 < 8:
+                        possibleKills.append(boardArr[pos[0]+1][pos[1]+2])
+                    if pos[0]-1 >= 0:
+                        possibleKills.append(boardArr[pos[0]-1][pos[1]+2])
+                if pos[1]-2 < 8 and pos[1] > 1:
+                    if pos[0]+1 < 8:
+                        possibleKills.append(boardArr[pos[0]+1][pos[1]-2])
+                    if pos[0]-1 >= 0:
+                        possibleKills.append(boardArr[pos[0]-1][pos[1]-2])
+                for piece in possibleKills:
+                    if piece.piece != 0 and piece.colour != colour:
+                        validKills.append(piece.pos)
+                return validKills
+
+            def checkPawn():
                 validKills = []
                 EnPassantInfo = ValidateMoves.checkEnPassant(colour, pos, boardArr)
                 print(EnPassantInfo)
@@ -140,3 +190,9 @@ class ValidateKills:
                         if boardArr[pos[0]+1][pos[1]+1].piece != 0 and boardArr[pos[0]+1][pos[1]+1].colour != boardArr[pos[0]][pos[1]].colour:
                             validKills.append([pos[0]+1,pos[1]+1])
                 return validKills
+
+            if piece == 2: # Pawn kill validation
+                validKills = checkPawn()
+            elif piece == 3:
+                validKills = checkKnight()
+            return validKills

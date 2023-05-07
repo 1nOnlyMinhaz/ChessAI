@@ -41,20 +41,24 @@ def stopMovement(self, event):
             board.delete(id)
         if moved:
             Board.boardArr[y][x] = Board.boardArr[self.pos[0]][self.pos[1]]
-            Board.boardArr[self.pos[0]][self.pos[1]] = Piece(board, 0, self.pos, self.colour)
-            print(Board.boardArr[y][x].piece)
+            Board.boardArr[self.pos[0]][self.pos[1]] = Piece(board, 0, self.pos, "None")
+            print(Board.boardArr[self.pos[0]][self.pos[1]].piece)
             self.pos = [y, x]
             for i in Board.boardArr:
                 for j in i:
-                    if j.piece == 2:
+                    if j.piece == Piece.Pawn:
                         j.enPassantValid = False
-            if self.piece == 2:
+            if self.piece == Piece.Pawn:
                 self.enPassantValid = ValidateMoves.checkEnPassantValid(self.colour, self.pos, Board.boardArr)
         
     x = event.x//SQSIZE
     y = event.y//SQSIZE
     XOutsideLimits = self.x == 0 or self.x == MAXPIECEX
     YOutsideLimits = self.y == 0 or self.y == MAXPIECEY
+    if XOutsideLimits:
+        x = self.x//SQSIZE
+    if YOutsideLimits:
+        y = self.y//SQSIZE
     board = self.board
     board.lift(self.button_id)
     if [y, x] in self.validKills:
@@ -66,22 +70,7 @@ def stopMovement(self, event):
         move(self.pos[1], self.pos[0], False)
     elif [y, x] not in self.validMoves:
         move(self.pos[1], self.pos[0], False)
-    elif XOutsideLimits:
-        print(1)
-        x = self.x//SQSIZE
-        if YOutsideLimits:
-            y = self.y//SQSIZE
-        move(x, y, True)
-        self.firstMove = False
-        self.moved = True
-    elif YOutsideLimits:
-        print(2)
-        y = self.y//SQSIZE
-        move(x, y, True)
-        self.firstMove = False
-        self.moved = True
     else:
-        print(3)
         move(x, y, True)
         self.firstMove = False
         self.moved = True

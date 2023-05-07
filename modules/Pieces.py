@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from modules.Validation import ValidateMoves
+from modules.Constants import *
 import modules.Movement as Movement
 
 class Piece:
@@ -38,7 +39,7 @@ class Piece:
                 # Get the Image object from the dictionary and create the canvas image button
                 img = Piece.imagesBlack[piece]
                 self.photo_image = ImageTk.PhotoImage(img)
-                self.button_id = board.create_image(75*pos[1], 75*pos[0], image=self.photo_image, anchor="nw")
+                self.button_id = board.create_image(SQSIZE*pos[1], SQSIZE*pos[0], image=self.photo_image, anchor="nw")
                 board.tag_bind(self.button_id, "<B1-Motion>", self.movePiece)
                 board.tag_bind(self.button_id, "<ButtonPress>", self.startMovement)
                 board.tag_bind(self.button_id, "<ButtonRelease>", self.stopMovement)
@@ -55,7 +56,7 @@ class Piece:
                 print(img)
                 self.photo_image = ImageTk.PhotoImage(img)
                 print(self.photo_image)
-                self.button_id = board.create_image(75*pos[1], 75*pos[0], image=self.photo_image, anchor="nw")
+                self.button_id = board.create_image(SQSIZE*pos[1], SQSIZE*pos[0], image=self.photo_image, anchor="nw")
                 board.tag_bind(self.button_id, "<B1 - Motion>", self.movePiece)
                 board.tag_bind(self.button_id, "<ButtonPress>", self.startMovement)
                 board.tag_bind(self.button_id, "<ButtonRelease>", self.stopMovement)
