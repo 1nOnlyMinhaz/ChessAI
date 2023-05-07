@@ -18,7 +18,6 @@ def startMovement(self, event):
     self.x, self.y = event.x, event.y
     moves = ValidateMoves.getPossibleMoves(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
     kills = ValidateKills.getPossibleKills(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
-    print(kills)
     self.validMoves = moves
     self.validKills = kills
     #Note this colour down for the movement: FFDD80. It shows the last move.
@@ -40,9 +39,13 @@ def stopMovement(self, event):
         for id in self.imageIDs:
             board.delete(id)
         if moved:
+            for id in Piece.rectIDs:
+                board.delete(id)
+            Piece.rectIDs.append(Board.highlightSquare(self.pos, board)) # Images and rectangles can go in the same place as their id systems both work for deleting
+            Piece.rectIDs.append(Board.highlightSquare([y, x], board))
+            board.lift(self.button_id)
             Board.boardArr[y][x] = Board.boardArr[self.pos[0]][self.pos[1]]
             Board.boardArr[self.pos[0]][self.pos[1]] = Piece(board, 0, self.pos, "None")
-            print(Board.boardArr[self.pos[0]][self.pos[1]].piece)
             self.pos = [y, x]
             for i in Board.boardArr:
                 for j in i:

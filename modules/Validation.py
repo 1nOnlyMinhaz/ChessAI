@@ -6,6 +6,46 @@ class ValidateMoves:
 
     def getPossibleMoves(pos, piece,colour, moved, boardArr):
         
+        def checkBishop():
+            validMoves = []
+            pos1 = pos[0]+1
+            pos2 = pos[1]+1
+            while pos1 < 8 and pos2 < 8:
+                if boardArr[pos1][pos2].piece == 0:
+                    validMoves.append([pos1, pos2])
+                else:
+                    break
+                pos1 += 1
+                pos2 += 1
+            pos1 = pos[0]-1
+            pos2 = pos[1]-1
+            while pos1 >= 0 and pos2 >= 0:
+                if boardArr[pos1][pos2].piece == 0:
+                    validMoves.append([pos1, pos2])
+                else:
+                    break
+                pos1 -= 1
+                pos2 -= 1
+            pos1 = pos[0]+1
+            pos2 = pos[1]-1
+            while pos1 < 8 and pos2 >= 0:
+                if boardArr[pos1][pos2].piece == 0:
+                    validMoves.append([pos1, pos2])
+                else:
+                    break
+                pos1 += 1
+                pos2 -= 1
+            pos1 = pos[0]-1
+            pos2 = pos[1]+1
+            while pos1 >= 0 and pos2 < 8:
+                if boardArr[pos1][pos2].piece == 0:
+                    validMoves.append([pos1, pos2])
+                else:
+                    break
+                pos1 -= 1
+                pos2 += 1
+            return validMoves
+
         def checkKnight():
             validMoves = []
             possibleMoves = []
@@ -33,6 +73,7 @@ class ValidateMoves:
                 if piece.piece == 0 and piece.colour != colour:
                     validMoves.append(piece.pos)
             return validMoves
+        
         def checkPawn():
             validMoves = []
             if not moved:
@@ -63,6 +104,8 @@ class ValidateMoves:
             validMoves = checkPawn()
         elif piece == 3: # Knight move validation.
             validMoves = checkKnight()
+        elif piece == 4: # Bishop move validation
+            validMoves = checkBishop()
         return validMoves
 
     def checkEnPassant(colour, pos, boardArr):
@@ -96,17 +139,14 @@ class ValidateMoves:
             if pos[1] != 0 and pos[1] != 7:
                 if condition1 or condition2:
                     if pos[0] == 3:
-                        print("En passant!")
                         return True
             elif pos[1] == 0:
                 if condition1:
                     if pos[0] == 3:
-                        print("En passant!")
                         return True
             else:
                 if condition2:
                     if pos[0] == 3:
-                        print("En passant!")
                         return True
         else:
             if colour == "Black":
@@ -120,23 +160,57 @@ class ValidateMoves:
                 #print(boardArr[pos[0]][pos[1]+1])
                 if condition1 or condition2:
                     if pos[0] == 4:
-                        print("En passant!")
                         return True
             elif pos[1] == 0:
                 if condition1:
                     if pos[0] == 4:
-                        print("En passant!")
                         return True
             else:
                 if condition2:
                     if pos[0] == 4:
-                        print("En passant!")
                         return True
         return False
 
 class ValidateKills:
     def getPossibleKills(pos, piece, colour, moved, boardArr):
             validKills = []
+
+            def checkBishop():
+                validKills = []
+                pos1 = pos[0]+1
+                pos2 = pos[1]+1
+                while pos1 < 8 and pos2 < 8:
+                    if boardArr[pos1][pos2].piece != 0 and boardArr[pos1][pos2].colour != colour:
+                        validKills.append([pos1, pos2])
+                        break
+                    pos1 += 1
+                    pos2 += 1
+                pos1 = pos[0]-1
+                pos2 = pos[1]-1
+                while pos1 >= 0 and pos2 >= 0:
+                    if boardArr[pos1][pos2].piece != 0 and boardArr[pos1][pos2].colour != colour:
+                        validKills.append([pos1, pos2])
+                        break
+                    pos1 -= 1
+                    pos2 -= 1
+                pos1 = pos[0]+1
+                pos2 = pos[1]-1
+                while pos1 < 8 and pos2 >= 0:
+                    if boardArr[pos1][pos2].piece != 0 and boardArr[pos1][pos2].colour != colour:
+                        validKills.append([pos1, pos2])
+                        break
+                    pos1 += 1
+                    pos2 -= 1
+                pos1 = pos[0]-1
+                pos2 = pos[1]+1
+                while pos1 >= 0 and pos2 < 8:
+                    if boardArr[pos1][pos2].piece != 0 and boardArr[pos1][pos2].colour != colour:
+                        validKills.append([pos1, pos2])
+                        break
+                    pos1 -= 1
+                    pos2 += 1
+                return validKills
+
             def checkKnight():
                 validKills = []
                 possibleKills = []
@@ -168,7 +242,6 @@ class ValidateKills:
             def checkPawn():
                 validKills = []
                 EnPassantInfo = ValidateMoves.checkEnPassant(colour, pos, boardArr)
-                print(EnPassantInfo)
                 if EnPassantInfo[0]:
                     for position in EnPassantInfo[1]:
                         if colour == "White":
@@ -195,4 +268,6 @@ class ValidateKills:
                 validKills = checkPawn()
             elif piece == 3:
                 validKills = checkKnight()
+            elif piece == 4:
+                validKills = checkBishop()
             return validKills

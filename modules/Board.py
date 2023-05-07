@@ -20,7 +20,6 @@ class Board:
                           [0,0,0,0,0,0,0,0]]
         img = Image.open("move.png")
         self.photoImage1 = ImageTk.PhotoImage(img)
-        print(self.photoImage1, "    THE DOT")
         img2 = Image.open("kill.png").convert("RGBA")
         self.photoImage2 = ImageTk.PhotoImage(img2)
         canvas = tk.Canvas(window, width=width, height=height)
@@ -72,7 +71,17 @@ class Board:
                 newPiece = Piece(board, str(pieceTypeFromSymbol[symbol]), [row, col], "Black")
                 boardArr[row][col] = newPiece # same here
                 col+=1
-        print(boardArr)
+
+    def highlightSquare(pos, board):
+        x1 = pos[1] * SQSIZE
+        y1 = pos[0] * SQSIZE
+        x2 = x1+SQSIZE
+        y2 = y1+SQSIZE
+        if (pos[0] + pos[1]) % 2 == 0:
+            id = board.create_rectangle(x1, y1, x2, y2, fill="#E0976D", outline = "#F6D686")
+        else:
+            id = board.create_rectangle(x1, y1, x2, y2, fill="#95895D", outline = "#F6D686")
+        return id
 
     def showMove(pos, board):
         x1 = pos[1] * SQSIZE

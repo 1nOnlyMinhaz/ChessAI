@@ -16,6 +16,7 @@ class Piece:
     White = 8
     Black = 16
     pieceList = ["k","p","n","b","r","q"]
+    rectIDs = []
     def __init__(self, board, piece, pos, colour):
         self.board = board
         self.piece = int(piece)
@@ -49,13 +50,10 @@ class Piece:
                     img = Image.open("Pieces/"+colour+"/"+piece+".png")
                     img = img.convert("RGBA")
                     Piece.imagesWhite[piece] = img
-                    print(Piece.imagesWhite)
 
                 # Get the Image object from the dictionary and create the canvas image button
                 img = Piece.imagesWhite[piece]
-                print(img)
                 self.photo_image = ImageTk.PhotoImage(img)
-                print(self.photo_image)
                 self.button_id = board.create_image(SQSIZE*pos[1], SQSIZE*pos[0], image=self.photo_image, anchor="nw")
                 board.tag_bind(self.button_id, "<B1 - Motion>", self.movePiece)
                 board.tag_bind(self.button_id, "<ButtonPress>", self.startMovement)
