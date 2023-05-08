@@ -6,6 +6,14 @@ class ValidateMoves:
 
     def getPossibleMoves(pos, piece,colour, moved, boardArr):
         
+        def checkQueen():
+            validMoves = []
+            for move in checkRook():
+                validMoves.append(move)
+            for move in checkBishop():
+                validMoves.append(move)
+            return validMoves
+
         def checkRook():
             validMoves = []
             pos1 = pos[0]+1
@@ -139,6 +147,8 @@ class ValidateMoves:
             validMoves = checkBishop()
         elif piece == 5: # Rook move validation
             validMoves = checkRook()
+        elif piece == 6: # Queen move validation
+            validMoves = checkQueen()
         return validMoves
 
     def checkEnPassant(colour, pos, boardArr):
@@ -207,7 +217,14 @@ class ValidateMoves:
 class ValidateKills:
     def getPossibleKills(pos, piece, colour, moved, boardArr):
             validKills = []
-
+            
+            def checkQueen():
+                validKills = []
+                for kill in checkRook():
+                    validKills.append(kill)
+                for kill in checkBishop():
+                    validKills.append(kill)
+                return validKills
             def checkRook():
                 validKills = []
                 pos1 = pos[0]+1
@@ -349,4 +366,6 @@ class ValidateKills:
                 validKills = checkBishop()
             elif piece == 5:
                 validKills = checkRook()
+            elif piece == 6:
+                validKills = checkQueen()
             return validKills

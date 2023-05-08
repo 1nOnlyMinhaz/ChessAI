@@ -1,5 +1,6 @@
 from modules.Validation import *
 from modules.Constants import *
+from modules.Game import Game
 
 def movePiece(self, event):
         # Get the current position of the mouse
@@ -16,18 +17,17 @@ def movePiece(self, event):
 def startMovement(self, event):
     from modules.Board import Board
     self.x, self.y = event.x, event.y
-    moves = ValidateMoves.getPossibleMoves(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
-    kills = ValidateKills.getPossibleKills(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
-    self.validMoves = moves
-    self.validKills = kills
-    #Note this colour down for the movement: FFDD80. It shows the last move.
-    # And for valid moves: 80FF67
-    if moves != []:
-        for pos in moves:
-            self.imageIDs.append(Board.showMove(pos,self.board))
-    if kills != []:
-        for pos in kills:
-            self.imageIDs.append(Board.showKill(pos,self.board))
+    if Game.currentPlayer == self.colour:
+        moves = ValidateMoves.getPossibleMoves(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
+        kills = ValidateKills.getPossibleKills(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
+        self.validMoves = moves
+        self.validKills = kills
+        if moves != []:
+            for pos in moves:
+                self.imageIDs.append(Board.showMove(pos,self.board))
+        if kills != []:
+            for pos in kills:
+                self.imageIDs.append(Board.showKill(pos,self.board))
 
 
 def stopMovement(self, event):
@@ -39,6 +39,7 @@ def stopMovement(self, event):
         for id in self.imageIDs:
             board.delete(id)
         if moved:
+            Game.currentPlayer = "Black" if Game.currentPlayer == "White" else "White"
             for id in Piece.rectIDs:
                 board.delete(id)
             Piece.rectIDs.append(Board.highlightSquare(self.pos, board)) # Images and rectangles can go in the same place as their id systems both work for deleting
@@ -64,7 +65,9 @@ def stopMovement(self, event):
         y = self.y//SQSIZE
     board = self.board
     board.lift(self.button_id)
-    if [y, x] in self.validKills:
+    if Game.currentPlayer != self.colour:
+        move(self.pos[1], self.pos[0], False)
+    elif [y, x] in self.validKills:
         Kill(board, [y, x], self.colour)
         move(x, y, True)
         self.firstMove = False
