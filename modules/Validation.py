@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-
+from modules.Constants import *
+from modules.Game import Game
 
 class ValidateMoves:
 
@@ -18,13 +19,13 @@ class ValidateMoves:
             validMoves = []
             pos1 = pos[0]+1
             pos2 = pos[1]+1
-            while pos1 < 8:
+            while pos1 < ROWS:
                 if boardArr[pos1][pos[1]].piece == 0:
                     validMoves.append([pos1, pos[1]])
                 else:
                     break
                 pos1 += 1
-            while pos2 < 8:
+            while pos2 < COLS:
                 if boardArr[pos[0]][pos2].piece == 0:
                     validMoves.append([pos[0], pos2])
                 else:
@@ -49,7 +50,7 @@ class ValidateMoves:
             validMoves = []
             pos1 = pos[0]+1
             pos2 = pos[1]+1
-            while pos1 < 8 and pos2 < 8:
+            while pos1 < ROWS and pos2 < COLS:
                 if boardArr[pos1][pos2].piece == 0:
                     validMoves.append([pos1, pos2])
                 else:
@@ -76,7 +77,7 @@ class ValidateMoves:
                 pos2 -= 1
             pos1 = pos[0]-1
             pos2 = pos[1]+1
-            while pos1 >= 0 and pos2 < 8:
+            while pos1 >= 0 and pos2 < COLS:
                 if boardArr[pos1][pos2].piece == 0:
                     validMoves.append([pos1, pos2])
                 else:
@@ -88,23 +89,23 @@ class ValidateMoves:
         def checkKnight():
             validMoves = []
             possibleMoves = []
-            if pos[0]+2 < 8:
-                if pos[1]+1 < 8:
+            if pos[0]+2 < ROWS:
+                if pos[1]+1 < COLS:
                     possibleMoves.append(boardArr[pos[0]+2][pos[1]+1])
                 if pos[1]-1 >= 0:
                     possibleMoves.append(boardArr[pos[0]+2][pos[1]-1])
-            if pos[0]-2 < 8 and pos[0] > 1:
-                if pos[1]+1 < 8:
+            if pos[0]-2 < COLS and pos[0] > 1:
+                if pos[1]+1 < COLS:
                     possibleMoves.append(boardArr[pos[0]-2][pos[1]+1])
                 if pos[1]-1 >= 0:
                     possibleMoves.append(boardArr[pos[0]-2][pos[1]-1])
-            if pos[1]+2 < 8:
-                if pos[0]+1 < 8:
+            if pos[1]+2 < COLS:
+                if pos[0]+1 < COLS:
                     possibleMoves.append(boardArr[pos[0]+1][pos[1]+2])
                 if pos[0]-1 >= 0:
                     possibleMoves.append(boardArr[pos[0]-1][pos[1]+2])
-            if pos[1]-2 < 8 and pos[1] > 1:
-                if pos[0]+1 < 8:
+            if pos[1]-2 < COLS and pos[1] > 1:
+                if pos[0]+1 < COLS:
                     possibleMoves.append(boardArr[pos[0]+1][pos[1]-2])
                 if pos[0]-1 >= 0:
                     possibleMoves.append(boardArr[pos[0]-1][pos[1]-2])
@@ -133,7 +134,7 @@ class ValidateMoves:
                         if boardArr[pos[0]-1][pos[1]].piece == 0:
                             validMoves = [[pos[0]-1,pos[1]]]
                 else: # If the colour is black
-                    if pos[0] != 7:
+                    if pos[0] != ROWS-1:
                         validMoves = []
                         if boardArr[pos[0]+1][pos[1]].piece == 0:
                             validMoves = [[pos[0]+1,pos[1]]]
@@ -171,7 +172,7 @@ class ValidateMoves:
                 return [True, enPassantMoves]
         return [False, 404]
     
-    def checkEnPassantValid(colour, pos, boardArr):
+    def checkEnPassantValid(colour, pos, boardArr, moved):
         if colour == "Black":
             condition1 = False
             condition2 = False
@@ -181,15 +182,15 @@ class ValidateMoves:
                 condition2 = boardArr[pos[0]][pos[1]-1].piece == 2 and boardArr[pos[0]][pos[1]-1].colour == "White"
             if pos[1] != 0 and pos[1] != 7:
                 if condition1 or condition2:
-                    if pos[0] == 3:
+                    if pos[0] == 3 and not moved:
                         return True
             elif pos[1] == 0:
                 if condition1:
-                    if pos[0] == 3:
+                    if pos[0] == 3 and not moved:
                         return True
             else:
                 if condition2:
-                    if pos[0] == 3:
+                    if pos[0] == 3 and not moved:
                         return True
         else:
             if colour == "Black":
@@ -202,14 +203,14 @@ class ValidateMoves:
             if pos[1] != 0 and pos[1] != 7:
                 #print(boardArr[pos[0]][pos[1]+1])
                 if condition1 or condition2:
-                    if pos[0] == 4:
+                    if pos[0] == 4 and not moved:
                         return True
             elif pos[1] == 0:
                 if condition1:
-                    if pos[0] == 4:
+                    if pos[0] == 4 and not moved:
                         return True
             else:
-                if condition2:
+                if condition2 and not moved:
                     if pos[0] == 4:
                         return True
         return False
@@ -217,7 +218,7 @@ class ValidateMoves:
 class ValidateKills:
     def getPossibleKills(pos, piece, colour, moved, boardArr):
             validKills = []
-            
+            from modules.Pieces import Piece
             def checkQueen():
                 validKills = []
                 for kill in checkRook():
@@ -358,14 +359,50 @@ class ValidateKills:
                             validKills.append([pos[0]+1,pos[1]+1])
                 return validKills
 
-            if piece == 2: # Pawn kill validation
+            if piece == Piece.Pawn: # Pawn kill validation
                 validKills = checkPawn()
-            elif piece == 3:
+            elif piece == Piece.Knight:
                 validKills = checkKnight()
-            elif piece == 4:
+            elif piece == Piece.Bishop:
                 validKills = checkBishop()
-            elif piece == 5:
+            elif piece == Piece.Rook:
                 validKills = checkRook()
-            elif piece == 6:
+            elif piece == Piece.Queen:
                 validKills = checkQueen()
             return validKills
+
+class ValidateKing:
+
+    def findChecks(boardArr):
+        for row in boardArr:
+            for piece in row:
+                for pos in ValidateKills.getPossibleKills(piece.pos, piece.piece, piece.colour, piece.moved, boardArr):
+                    if boardArr[pos[0]][pos[1]].piece == 1:
+                        print("Check!")
+                        return [True, boardArr[pos[0]][pos[1]].colour]
+        return [False]
+    
+    def findCheckedMoves(BoardArr, moves, kills, self):
+        from modules.Pieces import Piece
+        if not Game.WhiteKingChecked and not Game.BlackKingChecked:
+            checkedMoves = []
+            for pos in moves:
+                BoardArr[pos[0]][pos[1]] = BoardArr[self.pos[0]][self.pos[1]]
+                BoardArr[self.pos[0]][self.pos[1]] = Piece(self.board, 0, self.pos, "None")
+                if ValidateKing.findChecks(BoardArr)[0]:
+                    checkedMoves.append(pos)
+                BoardArr[self.pos[0]][self.pos[1]] = BoardArr[pos[0]][pos[1]]
+                BoardArr[pos[0]][pos[1]] = Piece(self.board, 0, pos, "None")
+            for pos in checkedMoves:
+                moves.remove(pos)
+            checkedKills = []
+            for pos in kills:
+                temp1 = BoardArr[pos[0]][pos[1]]
+                BoardArr[pos[0]][pos[1]] = BoardArr[self.pos[0]][self.pos[1]]
+                BoardArr[self.pos[0]][self.pos[1]] = Piece(self.board, 0, self.pos, "None")
+                if ValidateKing.findChecks(BoardArr)[0]:
+                    checkedKills.append(pos)
+                BoardArr[self.pos[0]][self.pos[1]] = BoardArr[pos[0]][pos[1]]
+                BoardArr[pos[0]][pos[1]] = temp1
+            for pos in checkedKills:
+                kills.remove(pos)

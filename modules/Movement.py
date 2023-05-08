@@ -16,10 +16,13 @@ def movePiece(self, event):
 
 def startMovement(self, event):
     from modules.Board import Board
+    from modules.Pieces import Piece
     self.x, self.y = event.x, event.y
     if Game.currentPlayer == self.colour:
         moves = ValidateMoves.getPossibleMoves(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
         kills = ValidateKills.getPossibleKills(self.pos,self.piece, self.colour,self.moved,Board.boardArr)
+        BoardArr = Board.boardArr
+        ValidateKing.findCheckedMoves(BoardArr, moves, kills, self)
         self.validMoves = moves
         self.validKills = kills
         if moves != []:
@@ -39,7 +42,6 @@ def stopMovement(self, event):
         for id in self.imageIDs:
             board.delete(id)
         if moved:
-            Game.currentPlayer = "Black" if Game.currentPlayer == "White" else "White"
             for id in Piece.rectIDs:
                 board.delete(id)
             Piece.rectIDs.append(Board.highlightSquare(self.pos, board)) # Images and rectangles can go in the same place as their id systems both work for deleting
@@ -53,7 +55,14 @@ def stopMovement(self, event):
                     if j.piece == Piece.Pawn:
                         j.enPassantValid = False
             if self.piece == Piece.Pawn:
-                self.enPassantValid = ValidateMoves.checkEnPassantValid(self.colour, self.pos, Board.boardArr)
+                self.enPassantValid = ValidateMoves.checkEnPassantValid(self.colour, self.pos, Board.boardArr, self.moved)
+            Game.currentPlayer = "Black" if Game.currentPlayer == "White" else "White"
+            KingsChecked = ValidateKing.findChecks(Board.boardArr)
+            if KingsChecked[0]:
+                if KingsChecked[1] == "White":
+                    Game.WhiteKingChecked = True
+                else:
+                    Game.BlackKingChecked = True
         
     x = event.x//SQSIZE
     y = event.y//SQSIZE
