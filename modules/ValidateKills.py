@@ -1,9 +1,31 @@
 from modules.ValidateMoves import ValidateMoves
+from modules.Constants import *
 
 class ValidateKills:
     def getPossibleKills(pos, piece, colour, moved, boardArr):
             validKills = []
             from modules.Pieces import Piece
+
+            def checkKing():
+                validKills = []
+                if pos[0]+1 < ROWS and boardArr[pos[0]+1][pos[1]].piece != 0 and boardArr[pos[0]+1][pos[1]].colour != colour:
+                    validKills.append([pos[0]+1, pos[1]])
+                if pos[1]+1 < COLS and boardArr[pos[0]][pos[1]+1].piece != 0 and boardArr[pos[0]][pos[1]+1].colour != colour:
+                    validKills.append([pos[0],pos[1]+1])
+                if pos[0]-1 >= 0 and boardArr[pos[0]-1][pos[1]].piece != 0 and boardArr[pos[0]-1][pos[1]].colour != colour:
+                    validKills.append([pos[0]-1, pos[1]])
+                if pos[1]-1 >= 0 and boardArr[pos[0]][pos[1]-1].piece != 0 and boardArr[pos[0]][pos[1]-1].colour != colour:
+                    validKills.append([pos[0], pos[1]-1])
+                if pos[0]+1 < ROWS and pos[1]+1 < COLS and boardArr[pos[0]+1][pos[1]+1].piece != 0 and boardArr[pos[0]+1][pos[1]+1].colour != colour:
+                    validKills.append([pos[0]+1, pos[1]+1])
+                if pos[0]+1 < ROWS and pos[1]-1 >= 0 and boardArr[pos[0]+1][pos[1]-1].piece != 0 and boardArr[pos[0]+1][pos[1]-1].colour != colour:
+                    validKills.append([pos[0]+1, pos[1]-1])
+                if pos[0]-1 >= 0 and pos[1]+1 < COLS and boardArr[pos[0]-1][pos[1]+1].piece != 0 and boardArr[pos[0]-1][pos[1]+1].colour != colour:
+                    validKills.append([pos[0]-1, pos[1]+1])
+                if pos[0]-1 >= 0 and pos[1]-1 >= 0 and boardArr[pos[0]-1][pos[1]-1].piece != 0 and boardArr[pos[0]-1][pos[1]-1].colour != colour:
+                    validKills.append([pos[0]-1, pos[1]-1])
+                return validKills
+
             def checkQueen():
                 validKills = []
                 for kill in checkRook():
@@ -144,7 +166,9 @@ class ValidateKills:
                             validKills.append([pos[0]+1,pos[1]+1])
                 return validKills
 
-            if piece == Piece.Pawn: # Pawn kill validation
+            if piece == Piece.King:
+                validKills = checkKing()
+            elif piece == Piece.Pawn: # Pawn kill validation
                 validKills = checkPawn()
             elif piece == Piece.Knight:
                 validKills = checkKnight()

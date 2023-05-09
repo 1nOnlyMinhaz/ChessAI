@@ -3,7 +3,26 @@ from modules.Constants import *
 class ValidateMoves:
 
     def getPossibleMoves(pos, piece,colour, moved, boardArr):
-        
+
+        def checkKing():
+            validMoves = []
+            if pos[0]+1 < ROWS and boardArr[pos[0]+1][pos[1]].piece == 0:
+                validMoves.append([pos[0]+1, pos[1]])
+            if pos[1]+1 < COLS and boardArr[pos[0]][pos[1]+1].piece == 0:
+                validMoves.append([pos[0],pos[1]+1])
+            if pos[0]-1 >= 0 and boardArr[pos[0]-1][pos[1]].piece == 0:
+                validMoves.append([pos[0]-1, pos[1]])
+            if pos[1]-1 >= 0 and boardArr[pos[0]][pos[1]-1].piece == 0:
+                validMoves.append([pos[0], pos[1]-1])
+            if pos[0]+1 < ROWS and pos[1]+1 < COLS and boardArr[pos[0]+1][pos[1]+1].piece == 0:
+                validMoves.append([pos[0]+1, pos[1]+1])
+            if pos[0]+1 < ROWS and pos[1]-1 >= 0 and boardArr[pos[0]+1][pos[1]-1].piece == 0:
+                validMoves.append([pos[0]+1, pos[1]-1])
+            if pos[0]-1 >= 0 and pos[1]+1 < COLS and boardArr[pos[0]-1][pos[1]+1].piece == 0:
+                validMoves.append([pos[0]-1, pos[1]+1])
+            if pos[0]-1 >= 0 and pos[1]-1 >= 0 and boardArr[pos[0]-1][pos[1]-1].piece == 0:
+                validMoves.append([pos[0]-1, pos[1]-1])
+            return validMoves
         def checkQueen():
             validMoves = []
             for move in checkRook():
@@ -137,7 +156,10 @@ class ValidateMoves:
                             validMoves = [[pos[0]+1,pos[1]]]
             return validMoves
         validMoves = []
-        if piece == 2: # Pawn move validation.
+
+        if piece == 1: # King move validation
+            validMoves = checkKing( )
+        elif piece == 2: # Pawn move validation.
             validMoves = checkPawn()
         elif piece == 3: # Knight move validation.
             validMoves = checkKnight()
