@@ -15,6 +15,10 @@ The only dependency this project has is [**Pillow 9.5**](https://pypi.org/projec
 **How to install**
 ---
 
+To install Pillow onto your computer, run the following command in the command prompt:
+
+```pip install Pillow```
+
 To install, download the zip file of this project by clicking Code in the top right. 
 
 Then, you can simply run it by running main.py.
@@ -31,6 +35,8 @@ Then, you can simply run it by running main.py.
 
 **Acknowledgements**
 ---
+
++ [@Sebastian Lague](https://www.youtube.com/@SebastianLague) Got the idea from him, feel free to check his channel out, he does some pretty cool projects.
 
 + [@Coding Spot](https://www.youtube.com/@codingspot), watched some of his videos as reference on how to make this. If you need help with learning how to code, you should definitely watch his videos, they are very helpful
 
