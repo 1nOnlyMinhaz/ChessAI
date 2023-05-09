@@ -15,6 +15,10 @@ The only dependency this project has is [**Pillow 9.5**](https://pypi.org/projec
 **How to install**
 ---
 
+To install Pillow onto your computer, run the following command in the command prompt:
+
+```pip install Pillow```
+
 To install, download the zip file of this project by clicking Code in the top right. 
 
 Then, you can simply run it by running main.py.
