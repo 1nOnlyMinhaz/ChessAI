@@ -1,4 +1,6 @@
-from modules.Validation import *
+from modules.ValidateMoves import ValidateMoves
+from modules.ValidateKills import ValidateKills
+from modules.ValidateKing import ValidateKing
 from modules.Constants import *
 from modules.Game import Game
 
@@ -56,7 +58,7 @@ def stopMovement(self, event):
                         j.enPassantValid = False
             if self.piece == Piece.Pawn:
                 self.enPassantValid = ValidateMoves.checkEnPassantValid(self.colour, self.pos, Board.boardArr, self.moved)
-            Game.currentPlayer = "Black" if Game.currentPlayer == "White" else "White"
+            Game.currentPlayer = "Black" if Game.currentPlayer == "White" else "White" # If the current player was White, change it to black, else change it to white
             KingsChecked = ValidateKing.findChecks(Board.boardArr)
             if KingsChecked[0]:
                 if KingsChecked[1] == "White":

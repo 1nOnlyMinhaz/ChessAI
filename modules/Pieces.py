@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-from modules.Validation import ValidateMoves
+from modules.ValidateMoves import ValidateMoves
 from modules.Constants import *
 import modules.Movement as Movement
 
