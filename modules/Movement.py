@@ -44,6 +44,8 @@ def stopMovement(self, event):
         for id in self.imageIDs:
             board.delete(id)
         if moved:
+            self.firstMove = False
+            self.moved = True
             for id in Piece.rectIDs:
                 board.delete(id)
             Piece.rectIDs.append(Board.highlightSquare(self.pos, board)) # Images and rectangles can go in the same place as their id systems both work for deleting
@@ -65,6 +67,9 @@ def stopMovement(self, event):
                     Game.WhiteKingChecked = True
                 else:
                     Game.BlackKingChecked = True
+                if ValidateKing.findCheckmate(Board.boardArr, KingsChecked[1]):
+                    Game.Winner = "White" if KingsChecked[1] == "Black" else "Black"
+                    print(f"{Game.Winner} wins by checkmate!")
         
     x = event.x//SQSIZE
     y = event.y//SQSIZE
