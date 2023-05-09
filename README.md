@@ -36,6 +36,8 @@ Then, you can simply run it by running main.py.
 **Acknowledgements**
 ---
 
++ [@Sebastian Lague](https://www.youtube.com/@SebastianLague) Got the idea from him, feel free to check his channel out, he does some pretty cool projects.
+
 + [@Coding Spot](https://www.youtube.com/@codingspot), watched some of his videos as reference on how to make this. If you need help with learning how to code, you should definitely watch his videos, they are very helpful
 
 + Chess piece images are all from [Wikimedia](https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces).
