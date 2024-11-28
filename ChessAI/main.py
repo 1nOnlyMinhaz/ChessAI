@@ -25,9 +25,10 @@ class Window(tk.Tk):
         self.board = Board(self.canvas, Constants.ROWS, Constants.COLS, self)
 
     def onResize(self, event):
-        if event.width == self.canvas.winfo_width() or event.height == self.canvas.winfo_height():
-            return
         size = min(event.width, event.height)
+        if self.canvas.winfo_width() == size or self.canvas.winfo_height() == size:
+            print("No resize")
+            return
         self.canvas.config(width=size, height=size)
         if self.promotionUI:
             pass
